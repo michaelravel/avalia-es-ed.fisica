@@ -2,17 +2,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "@/services/api";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronRight } from "lucide-react";
-import type { Aluno, Avaliacao } from "@/types/assessment";
+import { ChevronRight, Baby, BookOpen, GraduationCap, AlertCircle } from "lucide-react";
+import type { Aluno, Avaliacao, NivelEnsino } from "@/types/assessment";
+import { NIVEL_ENSINO_LABELS } from "@/types/assessment";
 import { useQuery } from "@tanstack/react-query";
 import AppHeader from "@/components/AppHeader";
+import { Switch } from "@/components/ui/switch";
+
+const NIVEL_ICONS: Record<NivelEnsino, React.ReactNode> = {
+  educacao_infantil: <Baby className="h-6 w-6" />,
+  fundamental_1: <BookOpen className="h-6 w-6" />,
+  fundamental_2: <GraduationCap className="h-6 w-6" />,
+};
 
 export default function AplicarPage() {
   const navigate = useNavigate();
+  const [nivelEnsino, setNivelEnsino] = useState<NivelEnsino | "">("");
   const [escola, setEscola] = useState("");
   const [turma, setTurma] = useState("");
   const [avaliacao, setAvaliacao] = useState<Avaliacao | null>(null);
   const [aluno, setAluno] = useState<Aluno | null>(null);
+  const [neurodivergente, setNeurodivergente] = useState(false);
 
   const { data: escolas = [] } = useQuery({
     queryKey: ["escolas"],
@@ -38,18 +48,47 @@ export default function AplicarPage() {
   });
 
   const handleStart = () => {
-    if (aluno && avaliacao) {
-      navigate(`/prova/${avaliacao.id_avaliacao}/${aluno.id_aluno}`);
+    if (aluno && avaliacao && nivelEnsino) {
+      const params = new URLSearchParams({ neurodivergente: neurodivergente ? "1" : "0", nivel: nivelEnsino });
+      navigate(`/prova/${avaliacao.id_avaliacao}/${aluno.id_aluno}?${params}`);
     }
   };
 
   // Step logic
-  const step = !escola ? 1 : !turma ? 2 : !avaliacao ? 3 : !aluno ? 4 : 5;
+  const step = !nivelEnsino ? 0 : !escola ? 1 : !turma ? 2 : !avaliacao ? 3 : !aluno ? 4 : 5;
 
   return (
     <div className="min-h-screen">
       <AppHeader title="Aplicar Avaliação" />
       <main className="container py-6 max-w-lg">
+        {/* Step 0: Nível de Ensino */}
+        <section className="mb-4 animate-fade-in">
+          <label className="text-sm font-bold text-muted-foreground mb-2 block">Nível de Ensino</label>
+          {nivelEnsino ? (
+            <button onClick={() => { setNivelEnsino(""); setEscola(""); setTurma(""); setAvaliacao(null); setAluno(null); }}
+              className="card-surface w-full p-3 text-left text-sm flex justify-between items-center hover:bg-accent/50">
+              <div className="flex items-center gap-2">
+                {NIVEL_ICONS[nivelEnsino]}
+                <span>{NIVEL_ENSINO_LABELS[nivelEnsino]}</span>
+              </div>
+              <span className="text-xs text-muted-foreground">Alterar</span>
+            </button>
+          ) : (
+            <div className="grid grid-cols-1 gap-2">
+              {(["educacao_infantil", "fundamental_1", "fundamental_2"] as NivelEnsino[]).map(nivel => (
+                <button key={nivel} onClick={() => setNivelEnsino(nivel)}
+                  className="card-surface w-full p-4 text-left text-sm flex items-center gap-3 hover:bg-accent/50 transition-colors">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-accent-foreground">
+                    {NIVEL_ICONS[nivel]}
+                  </div>
+                  <span className="font-medium">{NIVEL_ENSINO_LABELS[nivel]}</span>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground ml-auto" />
+                </button>
+              ))}
+            </div>
+          )}
+        </section>
+
         {/* Step 1: Escola */}
         {step >= 1 && (
           <section className="mb-4 animate-fade-in">
@@ -125,16 +164,26 @@ export default function AplicarPage() {
           </section>
         )}
 
-        {/* Step 4: Aluno */}
+        {/* Step 4: Aluno + Neurodivergente */}
         {step >= 4 && avaliacao && (
           <section className="mb-4 animate-fade-in">
             <label className="text-sm font-bold text-muted-foreground mb-2 block">Aluno</label>
             {aluno ? (
-              <button onClick={() => setAluno(null)}
-                className="card-surface w-full p-3 text-left text-sm flex justify-between items-center hover:bg-accent/50">
-                <span>{aluno.nome}</span>
-                <span className="text-xs text-muted-foreground">Alterar</span>
-              </button>
+              <>
+                <button onClick={() => setAluno(null)}
+                  className="card-surface w-full p-3 text-left text-sm flex justify-between items-center hover:bg-accent/50 mb-3">
+                  <span>{aluno.nome}</span>
+                  <span className="text-xs text-muted-foreground">Alterar</span>
+                </button>
+                {/* Neurodivergente toggle */}
+                <div className="card-surface p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 text-accent-foreground" />
+                    <span className="text-sm font-medium">Aluno Neurodivergente?</span>
+                  </div>
+                  <Switch checked={neurodivergente} onCheckedChange={setNeurodivergente} />
+                </div>
+              </>
             ) : (
               <div className="space-y-2 max-h-60 overflow-y-auto">
                 {alunos.map(a => (
