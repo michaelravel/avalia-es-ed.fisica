@@ -25,6 +25,12 @@ export default function HomePage() {
       title: "Dashboard",
       description: "Análise de desempenho por turma e escola",
     },
+    {
+      to: "/usuarios",
+      icon: Users,
+      title: "Cadastro de Usuários",
+      description: "Gerencie os professores cadastrados no sistema",
+    },
   ];
 
   return (

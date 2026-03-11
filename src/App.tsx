@@ -31,6 +31,7 @@ function AppRoutes() {
       <Route path="/prova/:id_avaliacao/:id_aluno" element={<ProtectedRoute><ProvaPage /></ProtectedRoute>} />
       <Route path="/resultados" element={<ProtectedRoute><ResultadosPage /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+      <Route path="/usuarios" element={<ProtectedRoute><UsuariosPage /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
