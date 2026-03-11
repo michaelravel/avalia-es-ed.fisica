@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ClipboardList, BarChart3, FileText, LogOut, User } from "lucide-react";
+import { ClipboardList, BarChart3, FileText, LogOut, User, Users } from "lucide-react";
 
 export default function HomePage() {
   const { user, logout } = useAuth();
@@ -24,6 +24,12 @@ export default function HomePage() {
       icon: BarChart3,
       title: "Dashboard",
       description: "Análise de desempenho por turma e escola",
+    },
+    {
+      to: "/usuarios",
+      icon: Users,
+      title: "Cadastro de Usuários",
+      description: "Gerencie os professores cadastrados no sistema",
     },
   ];
 
