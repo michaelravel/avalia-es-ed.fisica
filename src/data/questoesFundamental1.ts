@@ -1,0 +1,25 @@
+import type { QuestaoObservacao } from "@/types/assessment";
+
+export const questoesFundamental1: QuestaoObservacao[] = [
+  { id_questao: "F1001", competencia: "Compreensão de Regras", descricao: "Possuem capacidade de compreender e seguir as regras estabelecidas nas atividades.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1002", competencia: "Tomada de Decisão", descricao: "Conseguem tomar decisões de forma autônoma e crítica durante as atividades.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1003", competencia: "Resolução de Problemas", descricao: "Conseguem propor soluções a partir dos problemas que acontecem durante jogos ou atividades em grupo.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1004", competencia: "Memorização e Repetição de Sequências de Movimentos", descricao: "Conseguem memorizar e executar sequências de movimentos.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1005", competencia: "Habilidades Locomotoras", descricao: "Correr.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1006", competencia: "Habilidades Locomotoras", descricao: "Saltar.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1007", competencia: "Habilidades Locomotoras", descricao: "Galopar.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1008", competencia: "Habilidades Locomotoras", descricao: "Deslocamento lateral.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1009", competencia: "Habilidades Manipulativas", descricao: "Arremessar.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1010", competencia: "Habilidades Manipulativas", descricao: "Pegar.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1011", competencia: "Habilidades Manipulativas", descricao: "Driblar.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1012", competencia: "Habilidades Manipulativas", descricao: "Rebater.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1013", competencia: "Habilidades Manipulativas", descricao: "Chutar.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1014", competencia: "Habilidades de Estabilidade", descricao: "Equilíbrio estático.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1015", competencia: "Habilidades de Estabilidade", descricao: "Equilíbrio dinâmico.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1016", competencia: "Trabalho em Equipe", descricao: "Reconhece a importância de trabalhar em grupo, dividindo tarefas e respeitando os diferentes papéis e habilidades dos colegas.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1017", competencia: "Empatia e Solidariedade", descricao: "Respeitam as diferenças e são compreensíveis com as dificuldades um dos outros.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1018", competencia: "Responsabilidade", descricao: "Cuida dos materiais e respeita o espaço utilizado nas aulas de educação física.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1019", competencia: "Autoconfiança", descricao: "Demonstra confiança em suas capacidades motoras e cognitivas.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1020", competencia: "Persistência e Resiliência", descricao: "Demonstram perseverança em atividades desafiadoras.", nivel_ensino: "fundamental_1" },
+  { id_questao: "F1021", competencia: "Fair Play (Jogo Limpo)", descricao: "Participam das atividades com honestidade, aceitando as regras e respeitando os resultados.", nivel_ensino: "fundamental_1" },
+];

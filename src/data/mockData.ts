@@ -36,7 +36,8 @@ export const mockQuestoes: Questao[] = [
 
 export const mockQuestoesObservacao: QuestaoObservacao[] = [
   ...questoesEducacaoInfantil,
-  // Fundamental 1 and 2 questions will be added later
+  ...questoesFundamental1,
+  // Fundamental 2 questions will be added later
 ];
 
 export const mockAvaliacoes: Avaliacao[] = [
