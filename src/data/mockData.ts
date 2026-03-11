@@ -1,6 +1,7 @@
 // Mock data for development. In production, all data comes from Google Apps Script API.
 import type { Aluno, Questao, Avaliacao, Resultado, QuestaoObservacao, NivelEnsino } from "@/types/assessment";
 import { questoesEducacaoInfantil } from "./questoesEducacaoInfantil";
+import { questoesFundamental1 } from "./questoesFundamental1";
 
 export const mockAlunos: Aluno[] = [
   { id_aluno: "A001", nome: "Ana Clara Silva", escola: "EM Prof. João da Silva", turma: "6A", idade: 11, sexo: "F" },
@@ -35,7 +36,8 @@ export const mockQuestoes: Questao[] = [
 
 export const mockQuestoesObservacao: QuestaoObservacao[] = [
   ...questoesEducacaoInfantil,
-  // Fundamental 1 and 2 questions will be added later
+  ...questoesFundamental1,
+  // Fundamental 2 questions will be added later
 ];
 
 export const mockAvaliacoes: Avaliacao[] = [
