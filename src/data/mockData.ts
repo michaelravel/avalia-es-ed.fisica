@@ -2,6 +2,7 @@
 import type { Aluno, Questao, Avaliacao, Resultado, QuestaoObservacao, NivelEnsino } from "@/types/assessment";
 import { questoesEducacaoInfantil } from "./questoesEducacaoInfantil";
 import { questoesFundamental1 } from "./questoesFundamental1";
+import { questoesFundamental2 } from "./questoesFundamental2";
 
 export const mockAlunos: Aluno[] = [
   { id_aluno: "A001", nome: "Ana Clara Silva", escola: "EM Prof. João da Silva", turma: "6A", idade: 11, sexo: "F" },
