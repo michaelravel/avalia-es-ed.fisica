@@ -50,15 +50,14 @@ export const mockResultados: Resultado[] = [
   { id_aluno: "A008", id_avaliacao: "AV003", acertos: 3, erros: 7, percentual: 30, nivel: "Básico" },
 ];
 
-export const escolas = ["EM Prof. João da Silva", "EM Santa Fé", "EM Maracanã", "EM Nossa Senhora de Lourdes", "EMEI Pequenos Passos"];
+export const escolas = getEscolasImportadas();
 
 export function getTurmasByEscola(escola: string): string[] {
-  const turmas = mockAlunos.filter(a => a.escola === escola).map(a => a.turma);
-  return [...new Set(turmas)];
+  return getTurmasByEscolaImportada(escola);
 }
 
 export function getAlunosByTurma(escola: string, turma: string): Aluno[] {
-  return mockAlunos.filter(a => a.escola === escola && a.turma === turma);
+  return getAlunosByTurmaImportada(escola, turma);
 }
 
 export function getAvaliacoesByEscolaTurma(escola: string, turma: string): Avaliacao[] {
