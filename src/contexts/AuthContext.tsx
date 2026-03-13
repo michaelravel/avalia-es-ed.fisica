@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useCallback } from "react";
 import type { UserProfile } from "@/types/assessment";
 import { mockProfessores } from "@/data/mockProfessores";
 
+const ADMIN_EMAIL = "michael.ravel@edu.uberabadigital.com.br";
+
 interface AuthContextType {
   user: UserProfile | null;
   isLoading: boolean;
