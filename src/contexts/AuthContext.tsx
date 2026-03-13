@@ -44,6 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       email: professor.email,
       nome: professor.nome,
       isAuthenticated: true,
+      isAdmin: normalizedEmail === ADMIN_EMAIL,
     };
 
     localStorage.setItem("avdiag_user", JSON.stringify(profile));

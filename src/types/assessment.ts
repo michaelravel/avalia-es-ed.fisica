@@ -82,4 +82,5 @@ export interface UserProfile {
   email: string;
   nome: string;
   isAuthenticated: boolean;
+  isAdmin?: boolean;
 }
