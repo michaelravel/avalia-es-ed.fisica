@@ -1,22 +1,16 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import type { UserProfile } from "@/types/assessment";
+import { mockProfessores } from "@/data/mockProfessores";
 
 interface AuthContextType {
   user: UserProfile | null;
   isLoading: boolean;
-  login: () => void;
+  loginWithEmail: (email: string) => boolean;
   logout: () => void;
   error: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const ALLOWED_DOMAINS = ["edu.uberabadigital.com.br", "uberabadigital.com.br"];
-
-function isAllowedDomain(email: string): boolean {
-  const domain = email.split("@")[1]?.toLowerCase();
-  return ALLOWED_DOMAINS.some(d => domain === d);
-}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(() => {
@@ -29,34 +23,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const login = useCallback(() => {
-    // In production, this triggers Google OAuth.
-    // For demo, we simulate with a prompt.
+  const loginWithEmail = useCallback((email: string): boolean => {
     setIsLoading(true);
     setError(null);
 
-    // Simulate Google OAuth - in production replace with actual gapi flow
-    const email = window.prompt("Digite seu e-mail institucional para login:");
-    if (!email) {
-      setIsLoading(false);
-      return;
-    }
+    const normalizedEmail = email.trim().toLowerCase();
+    const professor = mockProfessores.find(
+      (p) => p.email.toLowerCase() === normalizedEmail
+    );
 
-    if (!isAllowedDomain(email)) {
-      setError("Acesso restrito à rede educacional.");
+    if (!professor) {
+      setError("E-mail não encontrado. Verifique se o e-mail está cadastrado no sistema.");
       setIsLoading(false);
-      return;
+      return false;
     }
 
     const profile: UserProfile = {
-      email,
-      nome: email.split("@")[0].replace(/\./g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+      email: professor.email,
+      nome: professor.nome,
       isAuthenticated: true,
     };
-    
+
     localStorage.setItem("avdiag_user", JSON.stringify(profile));
     setUser(profile);
     setIsLoading(false);
+    return true;
   }, []);
 
   const logout = useCallback(() => {
@@ -66,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, logout, error }}>
+    <AuthContext.Provider value={{ user, isLoading, loginWithEmail, logout, error }}>
       {children}
     </AuthContext.Provider>
   );
