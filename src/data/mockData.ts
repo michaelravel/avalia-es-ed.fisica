@@ -3,20 +3,10 @@ import type { Aluno, Questao, Avaliacao, Resultado, QuestaoObservacao, NivelEnsi
 import { questoesEducacaoInfantil } from "./questoesEducacaoInfantil";
 import { questoesFundamental1 } from "./questoesFundamental1";
 import { questoesFundamental2 } from "./questoesFundamental2";
+import { alunosImportados, getEscolasImportadas, getTurmasByEscolaImportada, getAlunosByTurmaImportada } from "./alunosImportados";
 
 export const mockAlunos: Aluno[] = [
-  { id_aluno: "A001", nome: "Ana Clara Silva", escola: "EM Prof. João da Silva", turma: "6A", idade: 11, sexo: "F" },
-  { id_aluno: "A002", nome: "Pedro Henrique Santos", escola: "EM Prof. João da Silva", turma: "6A", idade: 12, sexo: "M" },
-  { id_aluno: "A003", nome: "Maria Eduarda Oliveira", escola: "EM Prof. João da Silva", turma: "6A", idade: 11, sexo: "F" },
-  { id_aluno: "A004", nome: "Lucas Gabriel Costa", escola: "EM Prof. João da Silva", turma: "6B", idade: 12, sexo: "M" },
-  { id_aluno: "A005", nome: "Julia Fernanda Lima", escola: "EM Prof. João da Silva", turma: "6B", idade: 11, sexo: "F" },
-  { id_aluno: "A006", nome: "Gabriel Augusto Pereira", escola: "EM Santa Fé", turma: "7A", idade: 13, sexo: "M" },
-  { id_aluno: "A007", nome: "Isabela Cristina Souza", escola: "EM Santa Fé", turma: "7A", idade: 12, sexo: "F" },
-  { id_aluno: "A008", nome: "Matheus Ryan Almeida", escola: "EM Santa Fé", turma: "7A", idade: 13, sexo: "M" },
-  // Ed. Infantil students
-  { id_aluno: "A009", nome: "Helena Beatriz Rocha", escola: "EMEI Pequenos Passos", turma: "PRE-A", idade: 5, sexo: "F" },
-  { id_aluno: "A010", nome: "Theo Miguel Dias", escola: "EMEI Pequenos Passos", turma: "PRE-A", idade: 5, sexo: "M" },
-  { id_aluno: "A011", nome: "Laura Sophie Mendes", escola: "EMEI Pequenos Passos", turma: "PRE-B", idade: 4, sexo: "F" },
+  ...alunosImportados,
 ];
 
 export const mockQuestoes: Questao[] = [
@@ -60,15 +50,14 @@ export const mockResultados: Resultado[] = [
   { id_aluno: "A008", id_avaliacao: "AV003", acertos: 3, erros: 7, percentual: 30, nivel: "Básico" },
 ];
 
-export const escolas = ["EM Prof. João da Silva", "EM Santa Fé", "EM Maracanã", "EM Nossa Senhora de Lourdes", "EMEI Pequenos Passos"];
+export const escolas = getEscolasImportadas();
 
 export function getTurmasByEscola(escola: string): string[] {
-  const turmas = mockAlunos.filter(a => a.escola === escola).map(a => a.turma);
-  return [...new Set(turmas)];
+  return getTurmasByEscolaImportada(escola);
 }
 
 export function getAlunosByTurma(escola: string, turma: string): Aluno[] {
-  return mockAlunos.filter(a => a.escola === escola && a.turma === turma);
+  return getAlunosByTurmaImportada(escola, turma);
 }
 
 export function getAvaliacoesByEscolaTurma(escola: string, turma: string): Avaliacao[] {
