@@ -77,4 +77,5 @@ export const mockProfessores: Professor[] = [
   { id: 73, email: "williammax.bento@edu.uberabadigital.com.br", nome: "WILLIAM MAX BENTO" },
   { id: 74, email: "willian.marques@edu.uberabadigital.com.br", nome: "WILLIAN MARQUES DA COSTA" },
   { id: 75, email: "zelia.oliveira@edu.uberabadigital.com.br", nome: "ZELIA ALVES DE OLIVEIRA" },
+  { id: 76, email: "michael.ravel@edu.uberabadigital.com.br", nome: "MICHAEL RAVEL (ADMINISTRADOR)" },
 ];
