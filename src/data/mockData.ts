@@ -31,13 +31,40 @@ export const mockQuestoesObservacao: QuestaoObservacao[] = [
   ...questoesFundamental2,
 ];
 
-export const mockAvaliacoes: Avaliacao[] = [
-  { id_avaliacao: "AV001", data: "2026-03-10", escola: "EM Prof. João da Silva", turma: "6A", professor: "ABRAAO DOUGLAS DE SOUZA", nivel_ensino: "fundamental_2" },
-  { id_avaliacao: "AV002", data: "2026-03-10", escola: "EM Prof. João da Silva", turma: "6B", professor: "ABRAAO DOUGLAS DE SOUZA", nivel_ensino: "fundamental_2" },
-  { id_avaliacao: "AV003", data: "2026-03-08", escola: "EM Santa Fé", turma: "7A", professor: "DIEGO DE FREITAS COSTA PAGANI", nivel_ensino: "fundamental_2" },
-  { id_avaliacao: "AV004", data: "2026-03-10", escola: "EMEI Pequenos Passos", turma: "PRE-A", professor: "ABRAAO DOUGLAS DE SOUZA", nivel_ensino: "educacao_infantil" },
-  { id_avaliacao: "AV005", data: "2026-03-10", escola: "EMEI Pequenos Passos", turma: "PRE-B", professor: "ABRAAO DOUGLAS DE SOUZA", nivel_ensino: "educacao_infantil" },
-];
+function inferNivelEnsino(turma: string): NivelEnsino {
+  const t = turma.toUpperCase().trim();
+  // Educação Infantil: PRE, MATERNAL, BERÇÁRIO, INFANTIL, JARDIM, CRECHE, etc.
+  if (/^(PRE|PRÉ|MATERNAL|BER[CÇ]|INFANTIL|JARDIM|CRECHE|MINI|GRUPO|GR\s)/i.test(t)) return "educacao_infantil";
+  // Fundamental 2: 6° ao 9° ano
+  if (/^[6-9]/.test(t)) return "fundamental_2";
+  // Fundamental 1: 1° ao 5° ano
+  if (/^[1-5]/.test(t)) return "fundamental_1";
+  // Default by school name prefix
+  return "fundamental_1";
+}
+
+// Auto-generate one assessment per escola+turma from imported data
+function generateAvaliacoes(): Avaliacao[] {
+  const escolaTurmas = new Set<string>();
+  alunosImportados.forEach(a => {
+    if (a.escola && a.turma) escolaTurmas.add(`${a.escola}|||${a.turma}`);
+  });
+  let idx = 1;
+  return Array.from(escolaTurmas).map(key => {
+    const [escola, turma] = key.split("|||");
+    const id = `AV${String(idx++).padStart(4, "0")}`;
+    return {
+      id_avaliacao: id,
+      data: "2026-03-10",
+      escola,
+      turma,
+      professor: "",
+      nivel_ensino: inferNivelEnsino(turma),
+    };
+  });
+}
+
+export const mockAvaliacoes: Avaliacao[] = generateAvaliacoes();
 
 export const mockResultados: Resultado[] = [
   { id_aluno: "A001", id_avaliacao: "AV001", acertos: 8, erros: 2, percentual: 80, nivel: "Avançado" },
