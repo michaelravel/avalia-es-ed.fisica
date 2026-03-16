@@ -24,7 +24,7 @@ CREATE TABLE public.alunos (
 
 ALTER TABLE public.alunos ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can read alunos" ON public.alunos FOR SELECT USING (true);
-
+CREATE POLICY "allow all inserts" ON public.alunos FOR INSERT TO authenticated with check (true);
 -- Questoes de observação
 CREATE TABLE public.questoes_observacao (
   id_questao TEXT PRIMARY KEY,
