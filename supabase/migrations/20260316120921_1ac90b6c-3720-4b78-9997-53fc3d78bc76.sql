@@ -19,12 +19,11 @@ CREATE TABLE public.alunos (
   escola TEXT NOT NULL,
   turma TEXT NOT NULL,
   idade INTEGER NOT NULL DEFAULT 0,
-  sexo TEXT NOT NULL DEFAULT ''
+
 );
 
 ALTER TABLE public.alunos ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Anyone can read alunos" ON public.alunos FOR SELECT USING (true);
-CREATE POLICY "allow all inserts" ON public.alunos FOR INSERT TO authenticated with check (true);
+alter table alunos disable row level security;
 -- Questoes de observação
 CREATE TABLE public.questoes_observacao (
   id_questao TEXT PRIMARY KEY,
