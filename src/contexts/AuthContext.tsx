@@ -1,13 +1,11 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import type { UserProfile } from "@/types/assessment";
-import { mockProfessores } from "@/data/mockProfessores";
-
-const ADMIN_EMAIL = "michael.ravel@edu.uberabadigital.com.br";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AuthContextType {
   user: UserProfile | null;
   isLoading: boolean;
-  loginWithEmail: (email: string) => boolean;
+  loginWithEmail: (email: string) => Promise<boolean>;
   logout: () => void;
   error: string | null;
 }
@@ -25,32 +23,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loginWithEmail = useCallback((email: string): boolean => {
+  const loginWithEmail = useCallback(async (email: string): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
 
     const normalizedEmail = email.trim().toLowerCase();
-    const professor = mockProfessores.find(
-      (p) => p.email.toLowerCase() === normalizedEmail
-    );
 
-    if (!professor) {
-      setError("E-mail não encontrado. Verifique se o e-mail está cadastrado no sistema.");
+    try {
+      const { data: professor, error: dbError } = await supabase
+        .from("professores")
+        .select("*")
+        .ilike("email", normalizedEmail)
+        .maybeSingle();
+
+      if (dbError) throw dbError;
+
+      if (!professor) {
+        setError("E-mail não encontrado. Verifique se o e-mail está cadastrado no sistema.");
+        setIsLoading(false);
+        return false;
+      }
+
+      const profile: UserProfile = {
+        email: professor.email,
+        nome: professor.nome,
+        isAuthenticated: true,
+        isAdmin: professor.is_admin || false,
+      };
+
+      localStorage.setItem("avdiag_user", JSON.stringify(profile));
+      setUser(profile);
+      setIsLoading(false);
+      return true;
+    } catch (err) {
+      setError("Erro ao conectar com o servidor. Tente novamente.");
       setIsLoading(false);
       return false;
     }
-
-    const profile: UserProfile = {
-      email: professor.email,
-      nome: professor.nome,
-      isAuthenticated: true,
-      isAdmin: normalizedEmail === ADMIN_EMAIL,
-    };
-
-    localStorage.setItem("avdiag_user", JSON.stringify(profile));
-    setUser(profile);
-    setIsLoading(false);
-    return true;
   }, []);
 
   const logout = useCallback(() => {
