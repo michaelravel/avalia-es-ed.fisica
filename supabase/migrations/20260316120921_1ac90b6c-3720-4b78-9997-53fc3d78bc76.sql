@@ -15,8 +15,8 @@ CREATE POLICY "Anyone can read professores" ON public.professores FOR SELECT USI
 -- Alunos table
 CREATE TABLE public.alunos (
  
-  matricula	PRIMARY KEY,
-  unidade	NOT NULL,
+  id_aluno	PRIMARY KEY,
+  escola	NOT NULL,
   aluno NOT NULL,
   serie	NOT NULL,
   avaliacao NOT NULL,
@@ -25,6 +25,7 @@ CREATE TABLE public.alunos (
 ALTER TABLE alunos disable row level security;
 CREATE POLICY "allow all inserts" on public.alunos for insert to authenticated with check (true);
 CREATE POLICY "anon insert alunos" ON public.alunos FOR INSERT TO anon WITH CHECK (true);
+
 -- Questoes de observação
 CREATE TABLE public.questoes_observacao (
   id_questao TEXT PRIMARY KEY,
