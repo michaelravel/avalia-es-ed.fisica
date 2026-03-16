@@ -8,18 +8,28 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { mockProfessores } from "@/data/mockProfessores";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import type { Professor } from "@/types/assessment";
 import { ArrowLeft, Plus, Search, Users, Trash2 } from "lucide-react";
 
 export default function UsuariosPage() {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [professores, setProfessores] = useState<Professor[]>(mockProfessores);
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [novoEmail, setNovoEmail] = useState("");
   const [novoNome, setNovoNome] = useState("");
+
+  const { data: professores = [], isLoading } = useQuery({
+    queryKey: ["professores"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("professores").select("*").order("nome");
+      if (error) throw error;
+      return data as Professor[];
+    },
+  });
 
   const filtered = useMemo(() => {
     if (!search) return professores;
@@ -27,27 +37,33 @@ export default function UsuariosPage() {
     return professores.filter(p => p.nome.toLowerCase().includes(q) || p.email.toLowerCase().includes(q));
   }, [professores, search]);
 
-  function handleAdd() {
-    if (!novoEmail || !novoNome) {
-      toast({ title: "Preencha todos os campos", variant: "destructive" });
-      return;
-    }
-    if (professores.some(p => p.email.toLowerCase() === novoEmail.toLowerCase())) {
-      toast({ title: "E-mail já cadastrado", variant: "destructive" });
-      return;
-    }
-    const newId = Math.max(...professores.map(p => p.id), 0) + 1;
-    setProfessores(prev => [...prev, { id: newId, email: novoEmail.trim(), nome: novoNome.trim() }]);
-    setNovoEmail("");
-    setNovoNome("");
-    setDialogOpen(false);
-    toast({ title: "Usuário cadastrado com sucesso!" });
-  }
+  const addMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("professores").insert({ email: novoEmail.trim(), nome: novoNome.trim() } as any);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["professores"] });
+      setNovoEmail("");
+      setNovoNome("");
+      setDialogOpen(false);
+      toast({ title: "Usuário cadastrado com sucesso!" });
+    },
+    onError: (err: any) => {
+      toast({ title: err.message?.includes("unique") ? "E-mail já cadastrado" : "Erro ao cadastrar", variant: "destructive" });
+    },
+  });
 
-  function handleDelete(id: number) {
-    setProfessores(prev => prev.filter(p => p.id !== id));
-    toast({ title: "Usuário removido." });
-  }
+  const deleteMutation = useMutation({
+    mutationFn: async (id: number) => {
+      const { error } = await supabase.from("professores").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["professores"] });
+      toast({ title: "Usuário removido." });
+    },
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,12 +89,7 @@ export default function UsuariosPage() {
         <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
           <div className="relative w-full sm:w-80">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar por nome ou e-mail..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="pl-9"
-            />
+            <Input placeholder="Buscar por nome ou e-mail..." value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
           </div>
 
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -86,9 +97,7 @@ export default function UsuariosPage() {
               <Button><Plus className="h-4 w-4 mr-1" /> Novo Usuário</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Cadastrar Novo Usuário</DialogTitle>
-              </DialogHeader>
+              <DialogHeader><DialogTitle>Cadastrar Novo Usuário</DialogTitle></DialogHeader>
               <div className="space-y-4 pt-2">
                 <div className="space-y-2">
                   <Label htmlFor="nome">Nome completo</Label>
@@ -98,16 +107,16 @@ export default function UsuariosPage() {
                   <Label htmlFor="email">E-mail institucional</Label>
                   <Input id="email" type="email" value={novoEmail} onChange={e => setNovoEmail(e.target.value)} placeholder="Ex: joao.silva@edu.uberabadigital.com.br" />
                 </div>
-                <Button onClick={handleAdd} className="w-full">Cadastrar</Button>
+                <Button onClick={() => addMutation.mutate()} disabled={addMutation.isPending || !novoEmail || !novoNome} className="w-full">
+                  {addMutation.isPending ? "Cadastrando..." : "Cadastrar"}
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
         </div>
 
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Usuários Cadastrados</CardTitle>
-          </CardHeader>
+          <CardHeader className="pb-3"><CardTitle className="text-base">Usuários Cadastrados</CardTitle></CardHeader>
           <CardContent className="p-0">
             <div className="overflow-x-auto">
               <Table>
@@ -126,7 +135,7 @@ export default function UsuariosPage() {
                       <TableCell className="font-medium">{p.nome}</TableCell>
                       <TableCell className="text-muted-foreground text-sm">{p.email}</TableCell>
                       <TableCell>
-                        <Button variant="ghost" size="icon" onClick={() => handleDelete(p.id)} title="Remover">
+                        <Button variant="ghost" size="icon" onClick={() => deleteMutation.mutate(p.id)} title="Remover">
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
                       </TableCell>
@@ -135,7 +144,7 @@ export default function UsuariosPage() {
                   {filtered.length === 0 && (
                     <TableRow>
                       <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                        Nenhum usuário encontrado.
+                        {isLoading ? "Carregando..." : "Nenhum usuário encontrado."}
                       </TableCell>
                     </TableRow>
                   )}

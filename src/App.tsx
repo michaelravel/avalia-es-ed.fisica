@@ -10,6 +10,7 @@ import ProvaPage from "@/pages/ProvaPage";
 import ResultadosPage from "@/pages/ResultadosPage";
 import DashboardPage from "@/pages/DashboardPage";
 import UsuariosPage from "@/pages/UsuariosPage";
+import SeedPage from "@/pages/SeedPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ function AppRoutes() {
       <Route path="/resultados" element={<ProtectedRoute><ResultadosPage /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
       <Route path="/usuarios" element={<ProtectedRoute><UsuariosPage /></ProtectedRoute>} />
+      <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

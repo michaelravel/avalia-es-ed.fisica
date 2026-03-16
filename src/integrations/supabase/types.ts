@@ -14,7 +14,141 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alunos: {
+        Row: {
+          escola: string
+          id_aluno: string
+          idade: number
+          nome: string
+          sexo: string
+          turma: string
+        }
+        Insert: {
+          escola: string
+          id_aluno: string
+          idade?: number
+          nome: string
+          sexo?: string
+          turma: string
+        }
+        Update: {
+          escola?: string
+          id_aluno?: string
+          idade?: number
+          nome?: string
+          sexo?: string
+          turma?: string
+        }
+        Relationships: []
+      }
+      avaliacoes: {
+        Row: {
+          data: string
+          escola: string
+          id_avaliacao: string
+          nivel_ensino: string | null
+          professor: string
+          turma: string
+        }
+        Insert: {
+          data?: string
+          escola: string
+          id_avaliacao: string
+          nivel_ensino?: string | null
+          professor?: string
+          turma: string
+        }
+        Update: {
+          data?: string
+          escola?: string
+          id_avaliacao?: string
+          nivel_ensino?: string | null
+          professor?: string
+          turma?: string
+        }
+        Relationships: []
+      }
+      professores: {
+        Row: {
+          created_at: string
+          email: string
+          id: number
+          is_admin: boolean
+          nome: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: number
+          is_admin?: boolean
+          nome: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: number
+          is_admin?: boolean
+          nome?: string
+        }
+        Relationships: []
+      }
+      questoes_observacao: {
+        Row: {
+          competencia: string
+          descricao: string
+          id_questao: string
+          nivel_ensino: string
+        }
+        Insert: {
+          competencia: string
+          descricao: string
+          id_questao: string
+          nivel_ensino: string
+        }
+        Update: {
+          competencia?: string
+          descricao?: string
+          id_questao?: string
+          nivel_ensino?: string
+        }
+        Relationships: []
+      }
+      resultados: {
+        Row: {
+          acertos: number
+          created_at: string
+          erros: number
+          id: string
+          id_aluno: string
+          id_avaliacao: string
+          neurodivergente: boolean | null
+          nivel: string
+          percentual: number
+        }
+        Insert: {
+          acertos?: number
+          created_at?: string
+          erros?: number
+          id?: string
+          id_aluno: string
+          id_avaliacao: string
+          neurodivergente?: boolean | null
+          nivel?: string
+          percentual?: number
+        }
+        Update: {
+          acertos?: number
+          created_at?: string
+          erros?: number
+          id?: string
+          id_aluno?: string
+          id_avaliacao?: string
+          neurodivergente?: boolean | null
+          nivel?: string
+          percentual?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
