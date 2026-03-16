@@ -14,12 +14,12 @@ CREATE POLICY "Anyone can read professores" ON public.professores FOR SELECT USI
 
 -- Alunos table
 CREATE TABLE public.alunos (
-  id_aluno TEXT PRIMARY KEY,
-  nome TEXT NOT NULL,
-  escola TEXT NOT NULL,
-  turma TEXT NOT NULL,
-  idade INTEGER NOT NULL DEFAULT 0,
-
+ 
+  matricula	PRIMARY KEY,
+  unidade	NOT NULL,
+  aluno NOT NULL,
+  serie	NOT NULL,
+  avaliacao NOT NULL,
 );
 
 alter table alunos disable row level security;
