@@ -33,6 +33,7 @@ function AppRoutes() {
       <Route path="/resultados" element={<ProtectedRoute><ResultadosPage /></ProtectedRoute>} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
       <Route path="/usuarios" element={<ProtectedRoute><UsuariosPage /></ProtectedRoute>} />
+      <Route path="/seed" element={<ProtectedRoute><SeedPage /></ProtectedRoute>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
