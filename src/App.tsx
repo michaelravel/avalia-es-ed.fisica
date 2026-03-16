@@ -10,6 +10,7 @@ import ProvaPage from "@/pages/ProvaPage";
 import ResultadosPage from "@/pages/ResultadosPage";
 import DashboardPage from "@/pages/DashboardPage";
 import UsuariosPage from "@/pages/UsuariosPage";
+import SeedPage from "@/pages/SeedPage";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
