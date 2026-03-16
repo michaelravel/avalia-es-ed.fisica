@@ -23,7 +23,8 @@ CREATE TABLE public.alunos (
 );
 
 ALTER TABLE alunos disable row level security;
-CREATE POLICY "Anyone can insert alunos" ON public.alunos FOR INSERT WITH CHECK (true);
+CREATE POLICY "allow all inserts" on public.alunos for insert to authenticated with check (true);
+
 -- Questoes de observação
 CREATE TABLE public.questoes_observacao (
   id_questao TEXT PRIMARY KEY,
