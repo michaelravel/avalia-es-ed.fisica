@@ -22,7 +22,6 @@ CREATE TABLE public.alunos (
 
 );
 
-ALTER TABLE public.alunos ENABLE ROW LEVEL SECURITY;
 alter table alunos disable row level security;
 -- Questoes de observação
 CREATE TABLE public.questoes_observacao (
