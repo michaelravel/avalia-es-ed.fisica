@@ -90,14 +90,18 @@ export default function DashboardPage() {
                   <YAxis type="category" dataKey="nivel" width={120} tick={{ fontSize: 12 }} />
                   <Tooltip />
                   <Bar dataKey="quantidade" radius={[0, 4, 4, 0]}>
-                    {nivelData.map((entry, i) => (
-                      <Cell key={i} fill={
-                        entry.nivel === "Avançado" ? "var(--color-success)" :
-                        entry.nivel === "Intermediário" ? "var(--color-primary)" :
-                        entry.nivel === "Básico" ? "var(--color-warning)" :
-                        "var(--color-destructive)"
-                      } />
-                    ))}
+                    {nivelData.map((entry, i) => {
+                      const style = getComputedStyle(document.documentElement);
+                      const get = (v: string) => `hsl(${style.getPropertyValue(v).trim()})`;
+                      return (
+                        <Cell key={i} fill={
+                          entry.nivel === "Avançado" ? get("--success") :
+                          entry.nivel === "Intermediário" ? get("--primary") :
+                          entry.nivel === "Básico" ? get("--warning") :
+                          get("--destructive")
+                        } />
+                      );
+                    })}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
