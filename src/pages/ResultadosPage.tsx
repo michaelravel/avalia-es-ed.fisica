@@ -19,7 +19,7 @@ export default function ResultadosPage() {
     switch (nivel) {
       case "Avançado": return "text-success";
       case "Intermediário": return "text-primary";
-      case "Básico": return "text-amber-600";
+      case "Básico": return "text-warning";
       default: return "text-destructive";
     }
   };
