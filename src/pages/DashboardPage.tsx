@@ -30,10 +30,12 @@ export default function DashboardPage() {
   }));
 
   const barColor = (pct: number) => {
-    if (pct >= 80) return "var(--color-success)";
-    if (pct >= 60) return "var(--color-primary)";
-    if (pct >= 40) return "var(--color-warning)";
-    return "var(--color-destructive)";
+    const style = getComputedStyle(document.documentElement);
+    const get = (v: string) => `hsl(${style.getPropertyValue(v).trim()})`;
+    if (pct >= 80) return get("--success");
+    if (pct >= 60) return get("--primary");
+    if (pct >= 40) return get("--warning");
+    return get("--destructive");
   };
 
   return (
