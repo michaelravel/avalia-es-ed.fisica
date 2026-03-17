@@ -37,6 +37,10 @@
     --success: 134 61% 41%;
     --success-foreground: 0 0% 100%;
 
+    /* Warning - Laranja #D4920A */
+    --warning: 36 80% 50%;
+    --warning-foreground: 0 0% 100%;
+
     /* Destructive - Vermelho Sinalização #DC3545 */
     --destructive: 354 70% 54%;
     --destructive-foreground: 0 0% 100%;
@@ -83,6 +87,8 @@
     --accent-foreground: 204 80% 70%;
     --success: 134 61% 41%;
     --success-foreground: 0 0% 100%;
+    --warning: 36 80% 44%;
+    --warning-foreground: 0 0% 100%;
     --destructive: 354 70% 54%;
     --destructive-foreground: 0 0% 100%;
     --border: 210 11% 25%;

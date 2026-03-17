@@ -30,10 +30,12 @@ export default function DashboardPage() {
   }));
 
   const barColor = (pct: number) => {
-    if (pct >= 80) return "hsl(134, 61%, 41%)";
-    if (pct >= 60) return "hsl(204, 100%, 29%)";
-    if (pct >= 40) return "hsl(36, 80%, 50%)";
-    return "hsl(354, 70%, 54%)";
+    const style = getComputedStyle(document.documentElement);
+    const get = (v: string) => `hsl(${style.getPropertyValue(v).trim()})`;
+    if (pct >= 80) return get("--success");
+    if (pct >= 60) return get("--primary");
+    if (pct >= 40) return get("--warning");
+    return get("--destructive");
   };
 
   return (
@@ -88,14 +90,18 @@ export default function DashboardPage() {
                   <YAxis type="category" dataKey="nivel" width={120} tick={{ fontSize: 12 }} />
                   <Tooltip />
                   <Bar dataKey="quantidade" radius={[0, 4, 4, 0]}>
-                    {nivelData.map((entry, i) => (
-                      <Cell key={i} fill={
-                        entry.nivel === "Avançado" ? "hsl(134, 61%, 41%)" :
-                        entry.nivel === "Intermediário" ? "hsl(204, 100%, 29%)" :
-                        entry.nivel === "Básico" ? "hsl(36, 80%, 50%)" :
-                        "hsl(354, 70%, 54%)"
-                      } />
-                    ))}
+                    {nivelData.map((entry, i) => {
+                      const style = getComputedStyle(document.documentElement);
+                      const get = (v: string) => `hsl(${style.getPropertyValue(v).trim()})`;
+                      return (
+                        <Cell key={i} fill={
+                          entry.nivel === "Avançado" ? get("--success") :
+                          entry.nivel === "Intermediário" ? get("--primary") :
+                          entry.nivel === "Básico" ? get("--warning") :
+                          get("--destructive")
+                        } />
+                      );
+                    })}
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
