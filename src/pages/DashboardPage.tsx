@@ -90,10 +90,10 @@ export default function DashboardPage() {
                   <Bar dataKey="quantidade" radius={[0, 4, 4, 0]}>
                     {nivelData.map((entry, i) => (
                       <Cell key={i} fill={
-                        entry.nivel === "Avançado" ? "hsl(134, 61%, 41%)" :
-                        entry.nivel === "Intermediário" ? "hsl(204, 100%, 29%)" :
-                        entry.nivel === "Básico" ? "hsl(36, 80%, 50%)" :
-                        "hsl(354, 70%, 54%)"
+                        entry.nivel === "Avançado" ? "var(--color-success)" :
+                        entry.nivel === "Intermediário" ? "var(--color-primary)" :
+                        entry.nivel === "Básico" ? "var(--color-warning)" :
+                        "var(--color-destructive)"
                       } />
                     ))}
                   </Bar>
