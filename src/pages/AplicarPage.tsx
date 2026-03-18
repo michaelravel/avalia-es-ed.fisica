@@ -2,13 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "@/services/api";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Baby, BookOpen, GraduationCap, AlertCircle } from "lucide-react";
+import { ChevronRight, Baby, BookOpen, GraduationCap, AlertCircle, Plus } from "lucide-react";
 import type { Aluno, Avaliacao, NivelEnsino } from "@/types/assessment";
 import { NIVEL_ENSINO_LABELS } from "@/types/assessment";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import AppHeader from "@/components/AppHeader";
 import { Switch } from "@/components/ui/switch";
-
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 const NIVEL_ICONS: Record<NivelEnsino, React.ReactNode> = {
   educacao_infantil: <Baby className="h-6 w-6" />,
   fundamental_1: <BookOpen className="h-6 w-6" />,

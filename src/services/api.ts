@@ -51,6 +51,17 @@ export const api = {
     return (data || []) as Avaliacao[];
   },
 
+  createAvaliacao: async (escola: string, turma: string, nivelEnsino: NivelEnsino, professor: string): Promise<Avaliacao> => {
+    const id_avaliacao = `AV-${nivelEnsino.toUpperCase().slice(0, 3)}-${Date.now()}`;
+    const { data, error } = await supabase
+      .from("avaliacoes")
+      .insert({ id_avaliacao, escola, turma, nivel_ensino: nivelEnsino, professor })
+      .select()
+      .single();
+    if (error) throw error;
+    return data as Avaliacao;
+  },
+
   getQuestoes: async (_id_avaliacao: string): Promise<Questao[]> => {
     // Legacy multiple-choice - not currently used
     return [];
