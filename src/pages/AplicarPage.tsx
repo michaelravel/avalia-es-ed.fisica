@@ -18,12 +18,24 @@ const NIVEL_ICONS: Record<NivelEnsino, React.ReactNode> = {
 
 export default function AplicarPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [nivelEnsino, setNivelEnsino] = useState<NivelEnsino | "">("");
   const [escola, setEscola] = useState("");
   const [turma, setTurma] = useState("");
   const [avaliacao, setAvaliacao] = useState<Avaliacao | null>(null);
   const [aluno, setAluno] = useState<Aluno | null>(null);
   const [neurodivergente, setNeurodivergente] = useState(false);
+
+  const criarAvaliacaoMutation = useMutation({
+    mutationFn: () => api.createAvaliacao(escola, turma, nivelEnsino as NivelEnsino, user?.nome || ""),
+    onSuccess: (novaAvaliacao) => {
+      queryClient.invalidateQueries({ queryKey: ["avaliacoes", escola, turma, nivelEnsino] });
+      setAvaliacao(novaAvaliacao);
+      toast.success("Avaliação criada com sucesso!");
+    },
+    onError: () => toast.error("Erro ao criar avaliação."),
+  });
 
   const { data: escolas = [] } = useQuery({
     queryKey: ["escolas"],
