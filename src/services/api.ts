@@ -39,12 +39,14 @@ export const api = {
     return (data || []) as Aluno[];
   },
 
-  getAvaliacoes: async (escola: string, turma: string): Promise<Avaliacao[]> => {
-    const { data, error } = await supabase
+  getAvaliacoes: async (escola: string, turma: string, nivelEnsino?: string): Promise<Avaliacao[]> => {
+    let query = supabase
       .from("avaliacoes")
       .select("*")
       .eq("escola", escola)
       .eq("turma", turma);
+    if (nivelEnsino) query = query.eq("nivel_ensino", nivelEnsino);
+    const { data, error } = await query;
     if (error) throw error;
     return (data || []) as Avaliacao[];
   },
