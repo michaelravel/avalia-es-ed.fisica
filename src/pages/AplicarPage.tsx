@@ -161,7 +161,20 @@ export default function AplicarPage() {
               </button>
             ) : (
               <div className="space-y-2">
-                {avaliacoes.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma avaliação encontrada.</p>}
+                {avaliacoes.length === 0 && (
+                  <div className="text-center py-4 space-y-3">
+                    <p className="text-sm text-muted-foreground">Nenhuma avaliação encontrada.</p>
+                    <Button
+                      onClick={() => criarAvaliacaoMutation.mutate()}
+                      disabled={criarAvaliacaoMutation.isPending}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      {criarAvaliacaoMutation.isPending ? "Criando..." : "Criar Nova Avaliação"}
+                    </Button>
+                  </div>
+                )}
                 {avaliacoes.map(av => (
                   <button key={av.id_avaliacao} onClick={() => setAvaliacao(av)}
                     className="card-surface w-full p-3 text-left text-sm flex justify-between items-center hover:bg-accent/50 transition-colors">
