@@ -36,9 +36,9 @@ export default function AplicarPage() {
   });
 
   const { data: avaliacoes = [] } = useQuery({
-    queryKey: ["avaliacoes", escola, turma],
-    queryFn: () => api.getAvaliacoes(escola, turma),
-    enabled: !!escola && !!turma,
+    queryKey: ["avaliacoes", escola, turma, nivelEnsino],
+    queryFn: () => api.getAvaliacoes(escola, turma, nivelEnsino),
+    enabled: !!escola && !!turma && !!nivelEnsino,
   });
 
   const { data: alunos = [] } = useQuery({
