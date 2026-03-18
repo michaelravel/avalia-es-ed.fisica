@@ -2,13 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "@/services/api";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Baby, BookOpen, GraduationCap, AlertCircle } from "lucide-react";
+import { ChevronRight, Baby, BookOpen, GraduationCap, AlertCircle, Plus } from "lucide-react";
 import type { Aluno, Avaliacao, NivelEnsino } from "@/types/assessment";
 import { NIVEL_ENSINO_LABELS } from "@/types/assessment";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import AppHeader from "@/components/AppHeader";
 import { Switch } from "@/components/ui/switch";
-
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 const NIVEL_ICONS: Record<NivelEnsino, React.ReactNode> = {
   educacao_infantil: <Baby className="h-6 w-6" />,
   fundamental_1: <BookOpen className="h-6 w-6" />,
@@ -17,12 +18,24 @@ const NIVEL_ICONS: Record<NivelEnsino, React.ReactNode> = {
 
 export default function AplicarPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [nivelEnsino, setNivelEnsino] = useState<NivelEnsino | "">("");
   const [escola, setEscola] = useState("");
   const [turma, setTurma] = useState("");
   const [avaliacao, setAvaliacao] = useState<Avaliacao | null>(null);
   const [aluno, setAluno] = useState<Aluno | null>(null);
   const [neurodivergente, setNeurodivergente] = useState(false);
+
+  const criarAvaliacaoMutation = useMutation({
+    mutationFn: () => api.createAvaliacao(escola, turma, nivelEnsino as NivelEnsino, user?.nome || ""),
+    onSuccess: (novaAvaliacao) => {
+      queryClient.invalidateQueries({ queryKey: ["avaliacoes", escola, turma, nivelEnsino] });
+      setAvaliacao(novaAvaliacao);
+      toast.success("Avaliação criada com sucesso!");
+    },
+    onError: () => toast.error("Erro ao criar avaliação."),
+  });
 
   const { data: escolas = [] } = useQuery({
     queryKey: ["escolas"],
@@ -148,7 +161,20 @@ export default function AplicarPage() {
               </button>
             ) : (
               <div className="space-y-2">
-                {avaliacoes.length === 0 && <p className="text-sm text-muted-foreground">Nenhuma avaliação encontrada.</p>}
+                {avaliacoes.length === 0 && (
+                  <div className="text-center py-4 space-y-3">
+                    <p className="text-sm text-muted-foreground">Nenhuma avaliação encontrada.</p>
+                    <Button
+                      onClick={() => criarAvaliacaoMutation.mutate()}
+                      disabled={criarAvaliacaoMutation.isPending}
+                      variant="outline"
+                      className="gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      {criarAvaliacaoMutation.isPending ? "Criando..." : "Criar Nova Avaliação"}
+                    </Button>
+                  </div>
+                )}
                 {avaliacoes.map(av => (
                   <button key={av.id_avaliacao} onClick={() => setAvaliacao(av)}
                     className="card-surface w-full p-3 text-left text-sm flex justify-between items-center hover:bg-accent/50 transition-colors">
